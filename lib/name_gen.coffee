@@ -1,10 +1,15 @@
 # Generates a release name.
 #
 # @example
-#   new NameGen().twerk()
+#   new NameGen(["beautiful"], ["mind"]).twerk()
 #
 class NameGen
 
+  # Assign adjective and nouns.
+  #
+  # @param [Array<String>] @adjs an array of adjectives
+  # @param [Array<String>] @nouns an array of adjectives 
+  #
   constructor: (@adjs, @nouns) ->
 
   # Randomly combine an adjective and a noun, joined by a dash (-).
