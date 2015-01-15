@@ -1,11 +1,16 @@
-gulp = require("gulp")
+gulp             = require("gulp")
+requireDirectory = require("require-directory")
+gulpLoadPlugins  = require("gulp-load-plugins")
 
 # Gulpfile initializer. Straw facilitates gulping.
 #
 # @example Gulpfile.js
-#   require('coffee-script/register');
-#   Straw = require('./lib/straw.coffee');
-#   new Straw();
+#   require("coffee-script/register");
+#
+#   path  = require("path");
+#   Straw = require("./lib/straw.coffee");
+#
+#   new Straw(path.resolve("tasks"));
 #
 # @example tasks/clean.coffee
 #   module.exports = (gulp, plugins, straw) ->
@@ -18,12 +23,16 @@ class Straw
 
   # Load plugins and gulp tasks. Silence gulp if necessary.
   #
-  constructor: ->
-    @silenced = []
-    @plugins  = require("gulp-load-plugins")()
-    @tasks    = require("require-directory")(module, '../tasks')
+  # @param [String] @tasks_path path to gulp tasks directory
+  #
+  constructor: (@tasks_path) ->
+    @silenced     = []
+    @plugins      = gulpLoadPlugins()
+    @tasks        = requireDirectory(module, @tasks_path)
+    @vendor_tasks = requireDirectory(module, 'tasks')
 
-    fn(gulp, @plugins, @) for task, fn of @tasks
+    for tasks in [ @vendor_tasks, @tasks ]
+      fn(gulp, @plugins, @) for task, fn of tasks
 
     if @silenced.indexOf(process.argv[2]) > -1
       @turnOffGulpOutput()
@@ -65,7 +74,7 @@ class Straw
 
   # Turn on gulp console output.
   #
-  turnOffGulpOutput: ->
+  turnOnGulpOutput: ->
     console.log = @log if @log
 
 module.exports = Straw

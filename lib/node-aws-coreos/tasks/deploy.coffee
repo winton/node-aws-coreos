@@ -1,4 +1,4 @@
-Aws = require "node-aws-coreos/aws"
+Aws = require "./aws"
 
 module.exports = (gulp, $) ->
     

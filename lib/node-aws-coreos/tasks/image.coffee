@@ -1,4 +1,4 @@
-Docker = require("node-aws-coreos/docker")
+Docker = require("./docker")
 
 module.exports = (gulp, $, straw) ->
 
