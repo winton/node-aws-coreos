@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "codo": "",
-    "jasmine": "^2.1.1",
+    "jasmine": "^2.1.1"
   },
   "engines": {
     "node": ">=0.10.0"

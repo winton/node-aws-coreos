@@ -6,7 +6,9 @@ module.exports = (Aws) ->
 
     # Initialize `Aws.Api.Cfn`.
     #
-    constructor: ->
+    # @param [String] @template_path path to the CloudFormation template
+    #
+    constructor: (@template_path) ->
       @cfn = new Aws.Api.Cfn()
 
     # Create a CloudFormation stack.
@@ -14,7 +16,7 @@ module.exports = (Aws) ->
     # @return [Promise<Object>]
     #
     create: ->
-      @params = new Aws.Stack.Params()
+      @params = new Aws.Stack.Params(@template_path)
       @params.build().then (params) =>
         @cfn.createStack(params)
 

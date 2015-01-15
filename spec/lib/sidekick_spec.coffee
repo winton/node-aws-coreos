@@ -1,6 +1,6 @@
 os       = require("os")
 Promise  = require("bluebird")
-Sidekick = require("../../lib/sidekick")
+Sidekick = require("../../lib/node-aws-coreos/sidekick")
 
 describe "Sidekick", ->
 

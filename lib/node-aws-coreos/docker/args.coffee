@@ -62,7 +62,9 @@ module.exports = (Docker) ->
       for client_port, host_ports of @portBindings()
         for host_port in host_ports
           params.push("-p")
-          params.push("#{host_port.HostPort}:#{client_port.split("/")[0]}")
+          params.push(
+            "#{host_port.HostPort}:#{client_port.split("/")[0]}"
+          )
 
       params.push(@image())
       params.concat(@commands())
@@ -84,8 +86,7 @@ module.exports = (Docker) ->
             "-c"
             "while true; do sleep 1; done"
           ]
-        when "sidekick" then "bin/sidekick"
-        when "www"      then "bin/www"
+        else "bin/#{@name}"
 
     # Builds the container name from `Docker.image`.
     #
