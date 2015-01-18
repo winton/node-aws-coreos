@@ -34,7 +34,7 @@ module.exports = (Aws) ->
         name = null
 
         loop
-          name = new NameGen().twerk()
+          name = NameGen.twerk()
           name = [ @name, name ].join("-")
           
           break unless stacks.filter(
@@ -48,7 +48,7 @@ module.exports = (Aws) ->
     # @return [Promise<String>]
     #
     getStackName: ->
-      @generateName().then((name) ->
+      @generateName().then((name) =>
         Promise.props(
           name: name
           new_name: @ask(name)

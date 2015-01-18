@@ -18,7 +18,8 @@ module.exports = (Aws) ->
     create: ->
       @params = new Aws.Stack.Params(@template_path)
       @params.build().then (params) =>
-        @cfn.createStack(params)
+        #@cfn.createStack(params)
+        params
 
     # List all CloudFormation stacks.
     #

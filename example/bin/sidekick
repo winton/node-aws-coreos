@@ -1,0 +1,4 @@
+#!/usr/bin/env coffee
+
+Sidekick = require "node-aws-coreos/lib/sidekick"
+new Sidekick().start()

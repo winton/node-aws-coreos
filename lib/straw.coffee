@@ -1,4 +1,3 @@
-gulp             = require("gulp")
 requireDirectory = require("require-directory")
 gulpLoadPlugins  = require("gulp-load-plugins")
 
@@ -7,10 +6,11 @@ gulpLoadPlugins  = require("gulp-load-plugins")
 # @example Gulpfile.js
 #   require("coffee-script/register");
 #
-#   path  = require("path");
-#   Straw = require("./lib/straw.coffee");
+#   var gulp  = require("gulp");
+#   var path  = require("path");
+#   var Straw = require("node-aws-coreos/lib/straw");
 #
-#   new Straw(path.resolve("tasks"));
+#   new Straw(gulp, path.resolve("tasks"));
 #
 # @example tasks/clean.coffee
 #   module.exports = (gulp, plugins, straw) ->
@@ -25,14 +25,14 @@ class Straw
   #
   # @param [String] @tasks_path path to gulp tasks directory
   #
-  constructor: (@tasks_path) ->
+  constructor: (@gulp, @tasks_path) ->
     @silenced     = []
     @plugins      = gulpLoadPlugins()
     @tasks        = requireDirectory(module, @tasks_path)
     @vendor_tasks = requireDirectory(module, 'tasks')
 
     for tasks in [ @vendor_tasks, @tasks ]
-      fn(gulp, @plugins, @) for task, fn of tasks
+      fn(@gulp, @plugins, @) for task, fn of tasks
 
     if @silenced.indexOf(process.argv[2]) > -1
       @turnOffGulpOutput()
@@ -60,7 +60,7 @@ class Straw
   #
   silentTask: (task, fn) ->
     @silence(task)
-    gulp.task(task, fn)
+    @gulp.task(task, fn)
 
   # Turn off gulp console output.
   #

@@ -1,4 +1,4 @@
-Docker = require("./docker")
+Docker = require "../docker"
 
 module.exports = (gulp, $, straw) ->
 

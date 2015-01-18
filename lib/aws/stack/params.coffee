@@ -36,12 +36,16 @@ module.exports = (Aws) ->
         ]
         TemplateBody: options.template.toString()
 
-    # Reads the CloudFormation template.
+    # Reads the CloudFormation template and converts it to JSON.
     #
     # @return [String]
     #
     cfnTemplate: ->
-      fs.readFileAsync(@cfnTemplatePath())
+      JSON.stringify(
+        require @cfnTemplatePath()
+        null
+        2
+      )
 
     # Resolves the CloudFormation template path.
     #

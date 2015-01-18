@@ -1,6 +1,6 @@
 # NodeAwsCoreOS
 
-Helper classes to run a CoreOS stack on AWS and locally.
+Helper classes to run a CoreOS stack on AWS and your local machine.
 
 ## Dev setup
 

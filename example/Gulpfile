@@ -1,0 +1,7 @@
+require("coffee-script/register");
+
+var gulp    = require("gulp");
+var path    = require("path");
+var Straw   = require("node-aws-coreos/lib/straw");
+
+new Straw(gulp, path.resolve("tasks"));
