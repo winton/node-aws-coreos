@@ -1,0 +1,11 @@
+{
+  "name": "example",
+  "version": "0.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "node-aws-sdk": ""
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  }
+}
