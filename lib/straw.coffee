@@ -37,15 +37,6 @@ class Straw
     if @silenced.indexOf(process.argv[2]) > -1
       @turnOffGulpOutput()
 
-  # List the directories in `/dist`.
-  #
-  # @return [Array<String>] directory names
-  #
-  @distDirectories: ->
-    src   = "#{process.cwd()}/src"
-    dists = fs.readdirSync(src).filter (file) ->
-      fs.lstatSync("#{src}/#{file}").isDirectory()
-
   # Silences gulp output, while still allowing `console.log` from tasks.
   #
   # @param [String] task task name to silence gulp output for
