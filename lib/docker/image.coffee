@@ -6,14 +6,19 @@ module.exports = (Docker) ->
   #
   class Docker.Image
 
+    # Initializes image name and commands.
+    #
+    # @param [String] @name
+    #
+    constructor: (@name) ->
+      @commands =
+        rmi:   "docker rmi #{@name}"
+        build: "docker build -t #{@name} ."
+
     # Removes image and rebuilds it.
     #
     # @return [Promise<String,Number>] the output and exit code
     #
-    @build: ->
+    build: ->
       spawn(@commands.rmi).then ->
         spawn(@commands.build, stdio: "inherit")
-
-    @commands:
-      rmi:   "docker rmi #{Docker.image()}"
-      build: "docker build -t #{Docker.repo()} ."

@@ -13,7 +13,7 @@ module.exports = (Docker) ->
       @client = new Docker.Api.Client()
 
       @container = @find((container) =>
-        container.Names.indexOf("/#{Docker.image()}-#{name}") > -1
+        container.Names.indexOf("/#{Docker.image(name)}-#{name}") > -1
       ).then (container) =>
         @client.getContainer(container.Id) if container
 

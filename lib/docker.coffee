@@ -10,17 +10,19 @@ class Docker
     fs.readFileSync("#{process.cwd()}/.docker", "utf8")
   )
 
+  # @param [String] container Docker container name
   # @return [String] docker image name
   # @example
   #   Docker.image() # image
   #
-  @image: -> @config.repo.split("/").pop()
+  @image: (container) -> @config[container].split("/").pop()
 
+  # @param [String] container Docker container name
   # @return [String] full docker repo path
   # @example
   #   Docker.repo() # quay.io/user/image
   #
-  @repo:  -> @config.repo
+  @repo:  (container) -> @config[container]
 
   # Runs a container.
   #

@@ -1,24 +1,29 @@
-os = require "os"
-
 module.exports = (Docker) -> 
 
   # Generates arguments for Docker CLI and remote API.
   #
   class Docker.Args
 
-    # Initializes a variable holding env variables.
+    # Initializes a container name, command to run, env variables,
+    # and ports.
+    #
+    # @param [String] @name name of Docker container
+    # @param [Object] @options `command`, `container`, `env`, `ports`
     #
     constructor: (@name, @options={}) ->
-      @env  = @options.env || process.env
+      @command   = @options.command   || "bin/#{@name}"
+      @container = @options.container || "#{Docker.image(@name)}-#{@name}"
+      @env       = @options.env       || process.env
+      @ports     = @options.ports     || []
 
     # Generates parameters for a Docker remote API call.
     #
     # @return [Object]
     #
     apiParams: ->
-      name:  @containerName()
-      Cmd:   @commands()
-      Image: @image()
+      name:  @container
+      Cmd:   @command
+      Image: Docker.image(@name)
       Env:   @envs()
       HostConfig:
         Binds: @binds()
@@ -49,7 +54,7 @@ module.exports = (Docker) ->
     # @return [Object]
     #
     cliParams: (options={}) ->
-      params = [ "--name", @containerName() ]
+      params = [ "--name", @name ]
 
       for env in @envs()
         params.push("-e")
@@ -66,34 +71,8 @@ module.exports = (Docker) ->
             "#{host_port.HostPort}:#{client_port.split("/")[0]}"
           )
 
-      params.push(@image())
-      params.concat(@commands())
-
-    # Generates parameters for a Docker CLI call.
-    #
-    # @return [Object]
-    #
-    commands: ->
-      switch @name
-        when "etcd"
-          [ "-peer-addr", "127.0.0.1:7001"
-            "-addr", "127.0.0.1:4001"
-            "-name", "#{os.hostname()}"
-            "-discovery=#{@options.discovery_url}"
-          ]
-        when "nothing"
-          [ "/bin/sh"
-            "-c"
-            "while true; do sleep 1; done"
-          ]
-        else "bin/#{@name}"
-
-    # Builds the container name from `Docker.image`.
-    #
-    # @return [String]
-    #
-    containerName: ->
-      "#{Docker.image()}-#{@name}"
+      params.push(Docker.image(@name))
+      params.concat(@command)
 
     # Generate environment variables to be passed to the container.
     #
@@ -131,27 +110,14 @@ module.exports = (Docker) ->
       ports[key] = {} for key, value of ports
       ports
 
-    # Generate a Docker image path.
-    #
-    # @return [String] a Docker image path
-    #
-    image: ->
-      switch @name
-        when "etcd"
-          "quay.io/coreos/etcd:v0.4.6"
-        else
-          Docker.repo()
-
     # Generate an object for the `PortBindings` option of the
     # Docker API.
     #
     # @return [Object]
     #
     portBindings: ->
-      switch @name
-        when "etcd"
-          "4001/tcp": [ HostPort: "4001" ]
-          "7001/tcp": [ HostPort: "7001" ]
-        when "www"
-          "443/tcp": [ HostPort: "443" ]
-          "80/tcp":  [ HostPort: "80" ]
+      ports = {}
+      for port in @ports
+        [ host_port, container_port ] = port
+        ports["#{container_port}/tcp"] = [ HostPort: host_port ]
+      ports

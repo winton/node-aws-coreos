@@ -26,13 +26,11 @@ class Straw
   # @param [String] @tasks_path path to gulp tasks directory
   #
   constructor: (@gulp, @tasks_path) ->
-    @silenced     = []
-    @plugins      = gulpLoadPlugins()
-    @tasks        = requireDirectory(module, @tasks_path)
-    @vendor_tasks = requireDirectory(module, 'tasks')
-
-    for tasks in [ @vendor_tasks, @tasks ]
-      fn(@gulp, @plugins, @) for task, fn of tasks
+    @silenced = []
+    @plugins  = gulpLoadPlugins()
+    @tasks    = requireDirectory(module, @tasks_path)
+    
+    fn(@gulp, @plugins, @) for task, fn of @tasks
 
     if @silenced.indexOf(process.argv[2]) > -1
       @turnOffGulpOutput()
